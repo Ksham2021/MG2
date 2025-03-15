@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-blue-400 via-violet-400 to-fuchsia-400 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900;
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.gaming-card {
+  @apply relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl 
+         hover:shadow-2xl hover:scale-105 transition-all duration-300 dark:bg-gray-800/30;
+}
+
+.gaming-gradient {
+  @apply bg-gradient-to-r from-blue-500 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent;
+}
+
+.neon-border {
+  @apply border-2 border-transparent bg-gradient-to-r from-blue-500 via-violet-500 to-fuchsia-500 
+         dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) padding-box, 
+    linear-gradient(#fff 0 0);
+  mask: 
+    linear-gradient(#fff 0 0) padding-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+}
