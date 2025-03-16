@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Navigation } from './components/Navigation';
 import { Tree } from './components/Tree';
 import { CoinDisplay } from './components/CoinDisplay';
-import { Brain, Heart, Smile, Sun, Trophy, Sparkles, Clock, LogIn, UserPlus, BookOpen, Gamepad, Flower2, Star } from 'lucide-react';
+import { Brain, Heart, Smile, Sun, Trophy, Sparkles, Clock, LogIn, UserPlus, BookOpen, Gamepad, Flower2, Star, ChevronRight } from 'lucide-react';
 import { PiggyBankIcon } from './components/PiggyBankIcon';
 import { Blog } from './pages/Blog';
 import { Community } from './pages/Community';
+import { Articles } from './pages/Articles';
 import { MoodCheckPopup } from './components/MoodCheckPopup';
 import { ExitMoodCheckPopup } from './components/ExitMoodCheckPopup';
 import { MoodCalendar } from './components/MoodCalendar';
@@ -14,6 +15,7 @@ import { QuizPopup } from './components/QuizPopup';
 import { useMood } from './context/MoodContext';
 import type { TreeState } from './types';
 import type { Quiz } from './context/MoodContext';
+import { Exercises } from './pages/Exercises';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -87,6 +89,10 @@ function App() {
 
   const renderPage = () => {
     switch (currentPage) {
+      case 'exercises':
+        return <Exercises onBack={() => setCurrentPage('home')} onCoinsEarned={(amount) => setCoins(prev => prev + amount)} />;
+      case 'articles':
+        return <Articles onBack={() => setCurrentPage('home')} onCoinsEarned={(amount) => setCoins(prev => prev + amount)} />;
       case 'blog':
         return <Blog />;
       case 'community':
@@ -172,6 +178,13 @@ function App() {
                       </div>
                     </div>
                   ))}
+                  <button 
+                    onClick={() => setCurrentPage('articles')}
+                    className="w-full py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white font-medium flex items-center justify-center gap-2"
+                  >
+                    Read Articles
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
 
@@ -181,19 +194,29 @@ function App() {
                   <Flower2 className={`w-6 h-6 ${moodTheme.primaryColor}`} />
                   <h3 className="text-xl font-bold text-white">Daily Practice</h3>
                 </div>
-                <div className="p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
-                  <h4 className="font-medium text-white mb-2">5-Minute Mindfulness</h4>
-                  <p className="text-sm text-white/60 mb-2">Quick breathing exercise to center yourself</p>
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2 text-white/40">
-                      <Clock className="w-4 h-4" />
-                      5 min
-                    </div>
-                    <div className="flex items-center gap-1 text-yellow-400">
-                      <Star className="w-4 h-4" />
-                      <span>+10 coins</span>
+                <div className="space-y-4">
+                  <div className="p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
+                    <h4 className="font-medium text-white mb-2">5-Minute Mindfulness</h4>
+                    <p className="text-sm text-white/60 mb-2">Quick breathing exercise to center yourself</p>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 text-white/40">
+                        <Clock className="w-4 h-4" />
+                        5 min
+                      </div>
+                      <div className="flex items-center gap-1 text-yellow-400">
+                        <Star className="w-4 h-4" />
+                        <span>+10 coins</span>
+                      </div>
                     </div>
                   </div>
+
+                  <button 
+                    onClick={() => setCurrentPage('exercises')}
+                    className="w-full py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white font-medium flex items-center justify-center gap-2"
+                  >
+                    Workout
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
 
