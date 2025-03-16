@@ -16,6 +16,7 @@ import { useMood } from './context/MoodContext';
 import type { TreeState } from './types';
 import type { Quiz } from './context/MoodContext';
 import { Exercises } from './pages/Exercises';
+import { Profile } from './pages/Profile';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -97,6 +98,8 @@ function App() {
         return <Blog />;
       case 'community':
         return <Community />;
+      case 'profile':
+        return <Profile />;
       default:
         return (
           <main className="max-w-7xl mx-auto px-4 py-8">
@@ -246,30 +249,6 @@ function App() {
                 </div>
               </div>
             </div>
-
-            <section className="grid md:grid-cols-3 gap-6">
-              {[
-                { title: 'Depression', description: 'Master the darkness within', level: 'Beginner' },
-                { title: 'Anxiety', description: 'Face your fears head-on', level: 'Intermediate' },
-                { title: 'Stress Management', description: 'Build your resilience', level: 'Advanced' }
-              ].map((topic, index) => (
-                <div key={index} className="gaming-card p-6 group">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="font-bold text-white text-lg">{topic.title}</h3>
-                    <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/60">
-                      {topic.level}
-                    </span>
-                  </div>
-                  <p className="text-sm text-white/60 mb-4">
-                    {topic.description}
-                  </p>
-                  <button className="neon-border w-full py-2 px-4 rounded-lg text-white font-medium 
-                                   hover:scale-105 transition-transform">
-                    Start Quest →
-                  </button>
-                </div>
-              ))}
-            </section>
           </main>
         );
     }

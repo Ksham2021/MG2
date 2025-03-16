@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Star, Clock, Heart, Play, Check, Activity, Zap, Flower2, Sun, Wind, Brain } from 'lucide-react';
 import { useMood } from '../context/MoodContext';
+import { ExerciseActivityPopup } from '../components/ExerciseActivityPopup';
 
 interface ExercisesProps {
   onBack: () => void;
@@ -26,8 +27,17 @@ export function Exercises({ onBack, onCoinsEarned }: ExercisesProps) {
   const { getMoodTheme } = useMood();
   const moodTheme = getMoodTheme();
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
+  const [completedActivities, setCompletedActivities] = useState<Set<string>>(new Set());
   const [showReward, setShowReward] = useState(false);
+  const [rewardAmount, setRewardAmount] = useState(0);
   const [coins, setCoins] = useState(0);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<{
+    name: string;
+    description: string;
+    duration: string;
+    videoUrl?: string;
+  } | null>(null);
 
   const exercises: Exercise[] = [
     {
@@ -127,8 +137,37 @@ export function Exercises({ onBack, onCoinsEarned }: ExercisesProps) {
       setCompletedExercises(new Set([...completedExercises, exercise.id]));
       setCoins(prev => prev + exercise.reward);
       onCoinsEarned(exercise.reward);
+      setRewardAmount(exercise.reward);
       setShowReward(true);
       setTimeout(() => setShowReward(false), 2000);
+    }
+  };
+
+  const handleActivityClick = (exercise: Exercise, activity: { name: string; description: string; duration: string }) => {
+    setSelectedExercise(exercise);
+    setSelectedActivity(activity);
+  };
+
+  const handleActivityComplete = () => {
+    if (selectedExercise && selectedActivity) {
+      // Create a unique ID for the activity
+      const activityId = `${selectedExercise.id}-${selectedActivity.name}`;
+      
+      // Check if this activity was already completed
+      if (!completedActivities.has(activityId)) {
+        setCompletedActivities(new Set([...completedActivities, activityId]));
+        
+        // Check if all activities in this exercise are completed
+        const allActivitiesCompleted = selectedExercise.activities.every(activity => {
+          const id = `${selectedExercise.id}-${activity.name}`;
+          return completedActivities.has(id) || id === activityId;
+        });
+        
+        // If all activities are completed, mark the exercise as completed
+        if (allActivitiesCompleted && !completedExercises.has(selectedExercise.id)) {
+          handleComplete(selectedExercise);
+        }
+      }
     }
   };
 
@@ -137,7 +176,7 @@ export function Exercises({ onBack, onCoinsEarned }: ExercisesProps) {
       {showReward && (
         <div className="fixed top-4 right-4 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-lg flex items-center gap-2 animate-bounce">
           <Star className="w-5 h-5" />
-          +{exercises.find(e => e.id === Array.from(completedExercises).slice(-1)[0])?.reward} coins
+          +{rewardAmount} coins
         </div>
       )}
 
@@ -183,15 +222,31 @@ export function Exercises({ onBack, onCoinsEarned }: ExercisesProps) {
             <p className="text-white/60 mb-4">{exercise.description}</p>
 
             <div className="space-y-2 mb-4">
-              {exercise.activities.map((activity, index) => (
-                <div key={index} className="p-2 bg-white/5 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/80">{activity.name}</span>
-                    <span className="text-white/40 text-sm">{activity.duration}</span>
+              {exercise.activities.map((activity, index) => {
+                const activityId = `${exercise.id}-${activity.name}`;
+                const isActivityCompleted = completedActivities.has(activityId);
+                
+                return (
+                  <div 
+                    key={index} 
+                    className={`p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer flex items-start ${
+                      isActivityCompleted ? 'bg-green-500/10 border border-green-500/20' : 'bg-white/5'
+                    }`}
+                    onClick={() => handleActivityClick(exercise, activity)}
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-white/80">{activity.name}</span>
+                        <span className="text-white/40 text-sm">{activity.duration}</span>
+                      </div>
+                      <p className="text-white/40 text-sm">{activity.description}</p>
+                    </div>
+                    {isActivityCompleted && (
+                      <Check className="w-4 h-4 text-green-400 ml-2 mt-1" />
+                    )}
                   </div>
-                  <p className="text-white/40 text-sm">{activity.description}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="flex items-center justify-between text-sm">
@@ -230,6 +285,15 @@ export function Exercises({ onBack, onCoinsEarned }: ExercisesProps) {
           </div>
         ))}
       </div>
+
+      {selectedActivity && (
+        <ExerciseActivityPopup
+          isOpen={!!selectedActivity}
+          onClose={() => setSelectedActivity(null)}
+          activity={selectedActivity}
+          onComplete={handleActivityComplete}
+        />
+      )}
     </div>
   );
 } 
