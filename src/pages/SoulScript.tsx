@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Edit, BookOpen, Plus, Image, Type, Layout, PaintBucket, Save, Download, Moon, Sun, CloudLightning, Coffee, Palette, ChevronDown } from 'lucide-react';
+import { Edit, BookOpen, Plus, Image, Type, Layout, PaintBucket, Save, Moon, Sun, CloudLightning, Coffee, Palette, ChevronDown } from 'lucide-react';
 import { useMood } from '../context/MoodContext';
 
 export function SoulScript() {
@@ -356,25 +356,6 @@ export function SoulScript() {
             className={`w-full h-full min-h-[400px] bg-transparent border-none resize-none focus:outline-none ${getTextStyleClasses()}`}
             style={getFontStyles()}
           />
-        </div>
-      </div>
-      
-      {/* Preview of current styling */}
-      <div className="mt-6 p-4 gaming-card">
-        <h3 className="text-white font-medium mb-2">Current Styling:</h3>
-        <div className="flex flex-wrap gap-4">
-          <div className="bg-white/10 px-3 py-1 rounded-full text-white/80 text-sm">
-            Font: {getCurrentFontName()}
-          </div>
-          <div className="bg-white/10 px-3 py-1 rounded-full text-white/80 text-sm flex items-center gap-2">
-            Color: <div className={`w-3 h-3 rounded-full ${textColor.replace('text-', 'bg-')}`}></div> {getCurrentColorName()}
-          </div>
-          <div className="bg-white/10 px-3 py-1 rounded-full text-white/80 text-sm">
-            Size: {getCurrentSizeName()}
-          </div>
-          <div className="bg-white/10 px-3 py-1 rounded-full text-white/80 text-sm">
-            Background: {getCurrentBackgroundName()}
-          </div>
         </div>
       </div>
       
