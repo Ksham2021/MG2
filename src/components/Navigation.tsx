@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Users, User } from 'lucide-react';
+import { Home, BookOpen, Users, User, Edit } from 'lucide-react';
 
 interface NavigationProps {
   currentPage: string;
@@ -11,6 +11,7 @@ export function Navigation({ currentPage, onPageChange }: NavigationProps) {
     { id: 'home', label: 'Home', icon: Home },
     { id: 'blog', label: 'Blog', icon: BookOpen },
     { id: 'community', label: 'Community', icon: Users },
+    { id: 'soulscript', label: 'SoulScript', icon: Edit },
     { id: 'profile', label: 'Profile', icon: User }
   ];
 

@@ -17,6 +17,7 @@ import type { TreeState } from './types';
 import type { Quiz } from './context/MoodContext';
 import { Exercises } from './pages/Exercises';
 import { Profile } from './pages/Profile';
+import { SoulScript } from './pages/SoulScript';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -98,6 +99,8 @@ function App() {
         return <Blog />;
       case 'community':
         return <Community />;
+      case 'soulscript':
+        return <SoulScript />;
       case 'profile':
         return <Profile />;
       default:
