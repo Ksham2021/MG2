@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Palette, PenTool, Eraser, Square, Circle, Download, Undo, Redo, Trash2 } from 'lucide-react';
 import { useMood } from '../context/MoodContext';
 
-export function SoulScape() {
+export function SoulSketch() {
   const { getMoodTheme } = useMood();
   const moodTheme = getMoodTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -90,10 +90,19 @@ export function SoulScape() {
     context.beginPath();
     context.moveTo(x, y);
     
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    context.strokeStyle = drawingTool === 'eraser' ? '#1a1a2e' : brushColor;
-    context.lineWidth = brushSize;
+    if (drawingTool === 'square' || drawingTool === 'circle') {
+      context.beginPath();
+      context.rect(x, y, 0, 0);
+      context.fillStyle = brushColor;
+      context.strokeStyle = brushColor;
+      context.lineWidth = brushSize;
+    } else {
+      // For brush and eraser
+      context.lineCap = 'round';
+      context.lineJoin = 'round';
+      context.strokeStyle = drawingTool === 'eraser' ? '#1a1a2e' : brushColor;
+      context.lineWidth = brushSize;
+    }
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -106,8 +115,10 @@ export function SoulScape() {
     const x = e.nativeEvent.offsetX;
     const y = e.nativeEvent.offsetY;
     
-    context.lineTo(x, y);
-    context.stroke();
+    if (drawingTool === 'brush' || drawingTool === 'eraser') {
+      context.lineTo(x, y);
+      context.stroke();
+    }
   };
 
   const endDrawing = () => {
@@ -175,7 +186,7 @@ export function SoulScape() {
   const handleSave = () => {
     if (canvasRef.current) {
       const link = document.createElement('a');
-      link.download = 'soulscape-artwork.png';
+      link.download = 'soulsketch-artwork.png';
       link.href = canvasRef.current.toDataURL('image/png');
       link.click();
     }
@@ -186,7 +197,7 @@ export function SoulScape() {
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-2">
           <Palette className={`w-6 h-6 ${moodTheme.primaryColor}`} />
-          <h1 className="text-3xl font-bold gaming-gradient">SoulScape</h1>
+          <h1 className="text-3xl font-bold gaming-gradient">SoulSketch</h1>
         </div>
         <button
           onClick={handleSave}
@@ -199,7 +210,7 @@ export function SoulScape() {
 
       <div className="mb-6">
         <p className="text-white/60 max-w-3xl">
-          Welcome to SoulScape, where art becomes a language of its own. When words fall short, let your emotions flow through colors, shapes, and strokes. This is your canvas for self-expression—no rules, no judgments, just pure creativity.
+          Welcome to SoulSketch, where art becomes a language of its own. When words fall short, let your emotions flow through colors, shapes, and strokes. This is your canvas for self-expression—no rules, no judgments, just pure creativity.
         </p>
       </div>
 
@@ -321,4 +332,4 @@ export function SoulScape() {
       </div>
     </div>
   );
-}
+} 

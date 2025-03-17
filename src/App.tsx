@@ -18,6 +18,8 @@ import type { Quiz } from './context/MoodContext';
 import { Exercises } from './pages/Exercises';
 import { Profile } from './pages/Profile';
 import { SoulScript } from './pages/SoulScript';
+import { SoulSketch } from './pages/SoulSketch';
+import { SoulBloom } from './pages/SoulBloom';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -103,6 +105,10 @@ function App() {
         return <SoulScript />;
       case 'profile':
         return <Profile />;
+      case 'soulsketch':
+        return <SoulSketch />;
+      case 'soulbloom':
+        return <SoulBloom />;
       default:
         return (
           <main className="max-w-7xl mx-auto px-4 py-8">
