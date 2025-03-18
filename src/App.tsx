@@ -4,8 +4,6 @@ import { Tree } from './components/Tree';
 import { CoinDisplay } from './components/CoinDisplay';
 import { Brain, Heart, Smile, Sun, Trophy, Sparkles, Clock, LogIn, UserPlus, BookOpen, Gamepad, Flower2, Star, ChevronRight } from 'lucide-react';
 import { PiggyBankIcon } from './components/PiggyBankIcon';
-import { Blog } from './pages/Blog';
-import { Community } from './pages/Community';
 import { Articles } from './pages/Articles';
 import { MoodCheckPopup } from './components/MoodCheckPopup';
 import { ExitMoodCheckPopup } from './components/ExitMoodCheckPopup';
@@ -91,16 +89,16 @@ function App() {
     setCoins(prev => prev + earnedCoins);
   };
 
+  const handleTreeClick = () => {
+    setCurrentPage('soulbloom');
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'exercises':
         return <Exercises onBack={() => setCurrentPage('home')} onCoinsEarned={(amount) => setCoins(prev => prev + amount)} />;
       case 'articles':
         return <Articles onBack={() => setCurrentPage('home')} onCoinsEarned={(amount) => setCoins(prev => prev + amount)} />;
-      case 'blog':
-        return <Blog />;
-      case 'community':
-        return <Community />;
       case 'soulscript':
         return <SoulScript />;
       case 'profile':
@@ -123,16 +121,21 @@ function App() {
             </section>
 
             <div className="grid md:grid-cols-2 gap-8 mb-12">
-              <div className="gaming-card p-6">
+              <button 
+                onClick={handleTreeClick}
+                className="gaming-card p-6 hover:bg-white/5 transition-colors cursor-pointer group"
+              >
                 <Tree state={treeState} />
                 <div className="text-center mt-4">
                   <div className="flex items-center justify-center gap-2 mb-2">
-                    <Trophy className={`w-5 h-5 ${moodTheme.primaryColor}`} />
-                    <h3 className="font-bold text-white">Level {treeState.level} Mind Tree</h3>
+                    <Trophy className={`w-5 h-5 ${moodTheme.primaryColor} group-hover:scale-110 transition-transform`} />
+                    <h3 className="font-bold text-white group-hover:gaming-gradient transition-colors">
+                      Level {treeState.level} Mind Tree
+                    </h3>
                   </div>
-                  <p className="text-sm text-white/60">Your mental strength grows with every challenge!</p>
+                  <p className="text-sm text-white/60">Click to grow your mental strength in SoulBloom!</p>
                 </div>
-              </div>
+              </button>
 
               <MoodCalendar moodData={moodHistory} />
             </div>

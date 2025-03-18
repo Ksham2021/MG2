@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BookOpen, Clock, Heart, Share2, ArrowLeft, Star, ChevronLeft, Check } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { BookOpen, Clock, Heart, Share2, ArrowLeft, Star, ChevronLeft, Check, Timer } from 'lucide-react';
 import { useMood } from '../context/MoodContext';
 
 interface ArticlesProps {
@@ -16,6 +16,7 @@ interface Article {
   reward: number;
   image: string;
   contentImages?: string[];
+  minReadTime: number;
 }
 
 export function Articles({ onBack, onCoinsEarned }: ArticlesProps) {
@@ -25,6 +26,9 @@ export function Articles({ onBack, onCoinsEarned }: ArticlesProps) {
   const [readArticles, setReadArticles] = useState<Set<string>>(new Set());
   const [coins, setCoins] = useState<number>(0);
   const [showReward, setShowReward] = useState(false);
+  const [remainingTime, setRemainingTime] = useState<number | null>(null);
+  const [timerActive, setTimerActive] = useState(false);
+  const [completedTimers, setCompletedTimers] = useState<Set<string>>(new Set());
 
   const articles: Article[] = [
     {
@@ -56,6 +60,7 @@ Tips for working with this emotion:
 
 Remember, every emotion serves a purpose, and understanding your ${currentMood} state can help you grow stronger and more resilient.`,
       readTime: "5 min read",
+      minReadTime: 300,
       likes: 128,
       reward: 25
     },
@@ -91,6 +96,7 @@ Remember, every emotion serves a purpose, and understanding your ${currentMood} 
 
 Practice these techniques regularly to build your mindfulness muscle and better manage ${currentMood} moments.`,
       readTime: "7 min read",
+      minReadTime: 420,
       likes: 245,
       reward: 30
     },
@@ -124,6 +130,7 @@ Understanding these biological processes can help you:
 
 Your ${currentMood} state is a complex interplay of these systems, working together to help you navigate your environment and experiences.`,
       readTime: "8 min read",
+      minReadTime: 480,
       likes: 189,
       reward: 35
     },
@@ -164,6 +171,7 @@ Additional Supportive Habits:
 
 Remember to be patient and consistent as you build these habits into your daily life.`,
       readTime: "6 min read",
+      minReadTime: 360,
       likes: 312,
       reward: 28
     },
@@ -195,13 +203,42 @@ Common Themes from Our Community:
 
 Remember, you're part of a supportive community that understands and shares your experiences.`,
       readTime: "10 min read",
+      minReadTime: 600,
       likes: 276,
       reward: 40
     }
   ];
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (timerActive && remainingTime !== null && remainingTime > 0) {
+      timer = setInterval(() => {
+        setRemainingTime(prev => (prev !== null ? prev - 1 : null));
+      }, 1000);
+    } else if (remainingTime === 0 && selectedArticle) {
+      handleArticleComplete(selectedArticle);
+      setCompletedTimers(prev => new Set([...prev, selectedArticle.title]));
+      setTimerActive(false);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [timerActive, remainingTime]);
+
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const startTimer = (article: Article) => {
+    setRemainingTime(article.minReadTime);
+    setTimerActive(true);
+  };
+
   const handleArticleComplete = (article: Article) => {
-    if (!readArticles.has(article.title)) {
+    if (!readArticles.has(article.title) && completedTimers.has(article.title)) {
       setReadArticles(new Set([...readArticles, article.title]));
       const newCoins = article.reward;
       setCoins(prev => prev + newCoins);
@@ -256,24 +293,46 @@ Remember, you're part of a supportive community that understands and shares your
       </div>
 
       <div className="sticky bottom-16 left-0 right-0 px-4 py-2 bg-black/20 backdrop-blur-xl">
-        <button
-          onClick={() => handleArticleComplete(article)}
-          disabled={readArticles.has(article.title)}
-          className={`w-full py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors ${
-            readArticles.has(article.title)
-              ? 'bg-green-500/20 text-green-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500'
-          }`}
-        >
-          {readArticles.has(article.title) ? (
-            <>
-              <Check className="w-5 h-5" />
-              Completed
-            </>
-          ) : (
-            'Complete Reading'
-          )}
-        </button>
+        {!completedTimers.has(article.title) ? (
+          <div className="flex flex-col items-center gap-2">
+            {timerActive ? (
+              <div className="text-xl font-bold text-white">
+                <Timer className="w-5 h-5 inline mr-2 animate-pulse" />
+                {formatTime(remainingTime || 0)}
+              </div>
+            ) : (
+              <button
+                onClick={() => startTimer(article)}
+                className="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500 flex items-center justify-center gap-2"
+              >
+                <Timer className="w-5 h-5" />
+                Start Reading Timer
+              </button>
+            )}
+            <p className="text-sm text-white/60">
+              Complete the timer to earn {article.reward} coins
+            </p>
+          </div>
+        ) : (
+          <button
+            onClick={() => handleArticleComplete(article)}
+            disabled={readArticles.has(article.title)}
+            className={`w-full py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors ${
+              readArticles.has(article.title)
+                ? 'bg-green-500/20 text-green-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500'
+            }`}
+          >
+            {readArticles.has(article.title) ? (
+              <>
+                <Check className="w-5 h-5" />
+                Completed
+              </>
+            ) : (
+              'Claim Reward'
+            )}
+          </button>
+        )}
       </div>
     </div>
   );

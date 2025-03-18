@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Users, User, Edit, Palette, Flower2 } from 'lucide-react';
+import { Home, User, Edit, Palette, Flower2 } from 'lucide-react';
 
 interface NavigationProps {
   currentPage: string;
@@ -9,8 +9,6 @@ interface NavigationProps {
 export function Navigation({ currentPage, onPageChange }: NavigationProps) {
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
-    { id: 'blog', label: 'Blog', icon: BookOpen },
-    { id: 'community', label: 'Community', icon: Users },
     { id: 'soulscript', label: 'SoulScript', icon: Edit },
     { id: 'soulsketch', label: 'SoulSketch', icon: Palette },
     { id: 'soulbloom', label: 'SoulBloom', icon: Flower2 },
