@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Play, Pause, Star, Check } from 'lucide-react';
 
 interface ExerciseActivityProps {
@@ -18,6 +18,7 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
   const [isActive, setIsActive] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showReward, setShowReward] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Parse duration string to seconds (e.g., "10 min" -> 600 seconds)
   useEffect(() => {
@@ -52,6 +53,17 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
     };
   }, [isActive, timeRemaining, isCompleted, onComplete]);
 
+  // Add effect to control video playback
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isActive) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isActive]);
+
   if (!isOpen) return null;
 
   const formatTime = (seconds: number) => {
@@ -81,7 +93,17 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
           <p className="text-white/60 mb-4">{activity.description}</p>
           
           <div className="relative aspect-video bg-black/30 rounded-lg overflow-hidden mb-4">
-            {activity.videoUrl ? (
+            {activity.name === "Brisk Walking" ? (
+              <video 
+                ref={videoRef}
+                src="/assets/brisk-walking.mp4" 
+                className="w-full h-full object-cover"
+                loop
+                muted
+                playsInline
+                preload="auto"
+              />
+            ) : activity.videoUrl ? (
               <video 
                 src={activity.videoUrl} 
                 className="w-full h-full object-cover"
@@ -160,4 +182,4 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
       </div>
     </div>
   );
-} 
+}

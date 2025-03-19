@@ -3,6 +3,8 @@ import { ArrowLeft, Star, Clock, Heart, Play, Check, Activity, Zap, Flower2, Sun
 import { useMood } from '../context/MoodContext';
 import { ExerciseActivityPopup } from '../components/ExerciseActivityPopup';
 
+// import BriskWalkingVideo from '../assets/videos/brisk-walking.mp4';
+
 interface ExercisesProps {
   onBack: () => void;
   onCoinsEarned: (amount: number) => void;
@@ -19,6 +21,7 @@ interface Exercise {
     name: string;
     description: string;
     duration: string;
+    videoUrl?: string;
   }[];
   image: string;
 }
@@ -49,7 +52,12 @@ export function Exercises({ onBack, onCoinsEarned }: ExercisesProps) {
       icon: Activity,
       image: 'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&q=80&w=1000',
       activities: [
-        { name: 'Brisk Walking', description: 'Start with a moderate-paced walk', duration: '10 min' },
+        { 
+          name: 'Brisk Walking', 
+          description: 'Start with a moderate-paced walk', 
+          duration: '10 min',
+          videoUrl: '' // BriskWalkingVideo
+        },
         { name: 'Jogging', description: 'Increase pace to light jog', duration: '10 min' },
         { name: 'Jump Rope', description: 'High-intensity cardio', duration: '5 min' },
         { name: 'Cool Down', description: 'Slow walk and stretching', duration: '5 min' }
@@ -296,4 +304,4 @@ export function Exercises({ onBack, onCoinsEarned }: ExercisesProps) {
       )}
     </div>
   );
-} 
+}
