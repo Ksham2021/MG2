@@ -56,7 +56,7 @@ export function Exercises({ onBack, onCoinsEarned }: ExercisesProps) {
           name: 'Brisk Walking', 
           description: 'Start with a moderate-paced walk', 
           duration: '10 min',
-          videoUrl: '' // BriskWalkingVideo
+          videoUrl: '../assets/videos/brisk-walking.mp4'  // Reverting back to original path
         },
         { name: 'Jogging', description: 'Increase pace to light jog', duration: '10 min' },
         { name: 'Jump Rope', description: 'High-intensity cardio', duration: '5 min' },

@@ -55,11 +55,13 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
 
   // Add effect to control video playback
   useEffect(() => {
-    if (videoRef.current) {
+    const video = videoRef.current;
+    if (video) {
       if (isActive && timeRemaining > 0) {
-        videoRef.current.play();
+        Promise.resolve(video.play())
+          .catch(error => console.log('Video play error:', error));
       } else {
-        videoRef.current.pause();
+        video.pause();
       }
     }
   }, [isActive, timeRemaining]);
@@ -96,22 +98,23 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
             {activity.name === "Brisk Walking" ? (
               <video 
                 ref={videoRef}
-                src="/assets/brisk-walking.mp4" 
+                src="/videos/brisk-walking.mp4"
+                className="w-full h-full object-cover"
+                loop
+                playsInline
+                preload="auto"
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
+            ) : activity.videoUrl ? (
+              <video 
+                ref={videoRef}
+                src={activity.videoUrl}
                 className="w-full h-full object-cover"
                 loop
                 muted
                 playsInline
                 preload="auto"
-                autoPlay={isActive}
-              />
-            ) : activity.videoUrl ? (
-              <video 
-                src={activity.videoUrl} 
-                className="w-full h-full object-cover"
-                autoPlay={isActive}
-                loop
-                muted
-                playsInline
+                style={{ maxWidth: '100%', height: 'auto' }}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">

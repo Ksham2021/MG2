@@ -18,6 +18,7 @@ import { Profile } from './pages/Profile';
 import { SoulScript } from './pages/SoulScript';
 import { SoulSketch } from './pages/SoulSketch';
 import { SoulBloom } from './pages/SoulBloom';
+import Games from './pages/Games'; // Import the new Games component
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -107,6 +108,8 @@ function App() {
         return <SoulSketch />;
       case 'soulbloom':
         return <SoulBloom />;
+      case 'games': // Add a new case for the Games page
+        return <Games />;
       default:
         return (
           <main className="max-w-7xl mx-auto px-4 py-8">
@@ -258,6 +261,12 @@ function App() {
                       <span>+10 coins per puzzle</span>
                     </div>
                   </div>
+                  <button
+                    onClick={() => setCurrentPage('games')}
+                    className="w-full py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white font-medium"
+                  >
+                    Play Games
+                  </button>
                 </div>
               </div>
             </div>
