@@ -56,13 +56,13 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
   // Add effect to control video playback
   useEffect(() => {
     if (videoRef.current) {
-      if (isActive) {
+      if (isActive && timeRemaining > 0) {
         videoRef.current.play();
       } else {
         videoRef.current.pause();
       }
     }
-  }, [isActive]);
+  }, [isActive, timeRemaining]);
 
   if (!isOpen) return null;
 
@@ -102,6 +102,7 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
                 muted
                 playsInline
                 preload="auto"
+                autoPlay={isActive}
               />
             ) : activity.videoUrl ? (
               <video 
@@ -110,6 +111,7 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
                 autoPlay={isActive}
                 loop
                 muted
+                playsInline
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
