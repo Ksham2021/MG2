@@ -33,7 +33,7 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
 
   // Timer logic
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
     
     if (isActive && timeRemaining > 0) {
       interval = setInterval(() => {
@@ -95,23 +95,12 @@ export function ExerciseActivityPopup({ isOpen, onClose, activity, onComplete }:
           <p className="text-white/60 mb-4">{activity.description}</p>
           
           <div className="relative aspect-video bg-black/30 rounded-lg overflow-hidden mb-4">
-            {activity.name === "Brisk Walking" ? (
-              <video 
-                ref={videoRef}
-                src="/videos/brisk-walking.mp4"
-                className="w-full h-full object-cover"
-                loop
-                playsInline
-                preload="auto"
-                style={{ maxWidth: '100%', height: 'auto' }}
-              />
-            ) : activity.videoUrl ? (
+            {activity.videoUrl ? (
               <video 
                 ref={videoRef}
                 src={activity.videoUrl}
                 className="w-full h-full object-cover"
                 loop
-                muted
                 playsInline
                 preload="auto"
                 style={{ maxWidth: '100%', height: 'auto' }}
