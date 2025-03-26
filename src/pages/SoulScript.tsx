@@ -1,6 +1,52 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Edit, BookOpen, Plus, Image, Type, Layout, PaintBucket, Save, Moon, Sun, CloudLightning, Coffee, Palette, ChevronDown } from 'lucide-react';
+import { Edit, BookOpen, Plus, Image, Type, Layout, PaintBucket, Save, Moon, Sun, CloudLightning, Coffee, Palette, ChevronDown, BookOpen as Book, FileText, Sparkles } from 'lucide-react';
 import { useMood } from '../context/MoodContext';
+
+// Sample diary entries
+const dummyEntries = [
+  {
+    title: "Gratitude Reflection",
+    content: `Today I'm grateful for:
+
+1. The peaceful morning walk I took that cleared my mind
+2. The supportive message from a friend that made me smile
+3. The small win at work that boosted my confidence
+
+I noticed that when I focus on these positive moments, my mood lifts and I feel more energized. Tomorrow I want to continue this practice by finding at least three new things to appreciate.`,
+    font: 'font-sans',
+    color: 'text-white',
+    size: 'text-base',
+    background: 'bg-gradient-to-br from-blue-500/20 to-purple-500/20'
+  },
+  {
+    title: "Overcoming Challenges",
+    content: `I faced a difficult situation today when my presentation didn't go as planned. I felt disappointed at first, but I realized:
+
+- This is just one moment, not a reflection of my overall abilities
+- I received constructive feedback that will help me improve
+- Everyone faces setbacks, and they're opportunities for growth
+
+Next time, I'll prepare differently by practicing more with colleagues and focusing on the areas where I stumbled.`,
+    font: 'font-serif',
+    color: 'text-blue-400',
+    size: 'text-base',
+    background: 'bg-gradient-to-br from-indigo-500/20 to-purple-500/20'
+  },
+  {
+    title: "Mindfulness Moments",
+    content: `I practiced mindfulness for 10 minutes today. During my practice:
+
+I noticed my mind wandering to work concerns, but gently brought my focus back to my breathing
+I felt the tension in my shoulders releasing as I continued
+The sounds around me became more distinct when I truly listened
+
+I'm finding that these small mindfulness breaks are helping me stay centered throughout the day. I'll try to incorporate another short session tomorrow afternoon when I usually feel stressed.`,
+    font: 'font-sans',
+    color: 'text-green-400',
+    size: 'text-base',
+    background: 'bg-gradient-to-br from-amber-500/20 to-red-400/20'
+  }
+];
 
 export function SoulScript() {
   const { getMoodTheme, currentMood } = useMood();
@@ -41,6 +87,15 @@ export function SoulScript() {
     };
   }, [activeDropdown]);
   
+  // Apply a dummy entry
+  const applyDummyEntry = (entry: typeof dummyEntries[0]) => {
+    setDiaryContent(entry.content);
+    setSelectedFont(entry.font);
+    setTextColor(entry.color);
+    setFontSize(entry.size);
+    setBackground(entry.background);
+  };
+
   // Available customization options
   const fontOptions = [
     { name: 'Sans Serif', value: 'font-sans' },
@@ -220,6 +275,36 @@ export function SoulScript() {
           Welcome to SoulScript, your personal sanctuary to explore emotions, unleash creativity, and embrace self-expression. 
           This digital diary is yours to shape, decorate, and cherish—a safe space where you can write freely without judgment.
         </p>
+      </div>
+      
+      {/* Template Entries Section */}
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <FileText className={`w-5 h-5 ${moodTheme.primaryColor}`} />
+          <h2 className="text-xl font-bold text-white">Try a Template</h2>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-4">
+          {dummyEntries.map((entry, index) => (
+            <div 
+              key={index} 
+              className={`gaming-card p-4 hover:scale-[1.02] transition-all cursor-pointer ${entry.background}`}
+              onClick={() => applyDummyEntry(entry)}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-4 h-4 text-yellow-400" />
+                <h3 className={`font-bold ${entry.color} ${entry.font}`}>{entry.title}</h3>
+              </div>
+              <p className={`text-sm ${entry.color} ${entry.font} line-clamp-3`}>
+                {entry.content.substring(0, 120)}...
+              </p>
+              <div className="mt-2 text-xs text-white/60 flex gap-1 items-center">
+                <Book className="w-3 h-3" />
+                <span>Click to use this template</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       
       {/* Customization Toolbar */}
