@@ -59,7 +59,7 @@ export function Exercises({ onBack, onCoinsEarned }: ExercisesProps) {
           videoUrl: './Assests/BriskWalking.mp4'  // Using available video
         },
         { 
-          name: 'Jogging', 
+          name: 'Jogging',
           description: 'Increase pace to light jog', 
           duration: '10 min',
           videoUrl: './Assests/Jogging.mp4'

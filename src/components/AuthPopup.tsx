@@ -4,7 +4,7 @@ import { X, Mail, Phone, Eye, EyeOff } from 'lucide-react';
 interface AuthPopupProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (userData: { name: string; avatar?: string }) => void;
 }
 
 export function AuthPopup({ isOpen, onClose, onSuccess }: AuthPopupProps) {
@@ -16,15 +16,32 @@ export function AuthPopup({ isOpen, onClose, onSuccess }: AuthPopupProps) {
     phone: '',
     password: '',
     confirmPassword: '',
+    name: '',
   });
+
+  // Sample avatar URLs for demo purposes
+  const sampleAvatars = [
+    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150",
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150",
+    "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=150",
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
+  ];
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically make an API call to authenticate
-    console.log('Form submitted:', formData);
-    onSuccess();
+    
+    // For demo purposes, we'll create a mock user
+    const randomAvatar = sampleAvatars[Math.floor(Math.random() * sampleAvatars.length)];
+    const displayName = formData.name || formData.email.split('@')[0] || 'User';
+    
+    // Pass user data to parent component
+    onSuccess({
+      name: displayName,
+      avatar: randomAvatar
+    });
+    
     onClose();
   };
 
@@ -74,6 +91,20 @@ export function AuthPopup({ isOpen, onClose, onSuccess }: AuthPopupProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {!isSignIn && (
+            <div>
+              <label className="block text-white/60 text-sm mb-2">Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/40"
+                placeholder="Enter your name"
+              />
+            </div>
+          )}
+          
           {authMethod === 'email' ? (
             <div>
               <label className="block text-white/60 text-sm mb-2">Email</label>
@@ -139,7 +170,7 @@ export function AuthPopup({ isOpen, onClose, onSuccess }: AuthPopupProps) {
 
           <button
             type="submit"
-            className="w-full neon-border py-2 px-4 rounded-lg text-white font-medium hover:scale-105 transition-transform"
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 py-2 px-4 rounded-lg text-white font-medium hover:scale-105 transition-transform border border-white/20"
           >
             {isSignIn ? 'Sign In' : 'Sign Up'}
           </button>

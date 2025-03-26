@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Edit, Calendar, LineChart, CheckSquare, Award, Settings, ChevronRight, Plus, Check, X, Camera } from 'lucide-react';
 import { useMood } from '../context/MoodContext';
 import { MoodCalendar } from '../components/MoodCalendar';
@@ -14,12 +14,17 @@ export function Profile() {
   const { currentMood, getMoodTheme } = useMood();
   const moodTheme = getMoodTheme();
   
-  // User profile state
-  const [username, setUsername] = useState('Alex Johnson');
+  // Get username from localStorage if available
+  const [username, setUsername] = useState(() => {
+    return localStorage.getItem('Rishabh') || 'Rishabh';
+  });
   const [editingUsername, setEditingUsername] = useState(false);
   const [tempUsername, setTempUsername] = useState(username);
   const [bio, setBio] = useState('Mental health enthusiast. Working on building better habits and mindfulness practices every day.');
-  const [avatar, setAvatar] = useState('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200');
+  // Get avatar from localStorage if available
+  const [avatar, setAvatar] = useState(() => {
+    return localStorage.getItem('userAvatar') || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200';
+  });
   const [editingBio, setEditingBio] = useState(false);
   const [tempBio, setTempBio] = useState(bio);
   const [showProfilePicturePopup, setShowProfilePicturePopup] = useState(false);
@@ -99,6 +104,7 @@ export function Profile() {
   const saveUsername = () => {
     if (tempUsername.trim()) {
       setUsername(tempUsername);
+      localStorage.setItem('userName', tempUsername);
       setEditingUsername(false);
     }
   };
@@ -106,9 +112,11 @@ export function Profile() {
   const handleAvatarChange = (newAvatar: string) => {
     if (newAvatar === 'default') {
       // Use a default user icon or placeholder
-      setAvatar('');
+      setAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200');
+      localStorage.setItem('userAvatar', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200');
     } else {
       setAvatar(newAvatar);
+      localStorage.setItem('userAvatar', newAvatar);
     }
   };
   

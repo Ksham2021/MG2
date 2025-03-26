@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, User, Edit, Palette, Flower2 } from 'lucide-react';
+import { Home, User, Edit, Palette, Flower2, Users } from 'lucide-react';
 
 interface NavigationProps {
   currentPage: string;
@@ -12,6 +12,7 @@ export function Navigation({ currentPage, onPageChange }: NavigationProps) {
     { id: 'soulscript', label: 'SoulScript', icon: Edit },
     { id: 'soulsketch', label: 'SoulSketch', icon: Palette },
     { id: 'soulbloom', label: 'SoulBloom', icon: Flower2 },
+    { id: 'community', label: 'Community', icon: Users },
     { id: 'profile', label: 'Profile', icon: User }
   ];
 

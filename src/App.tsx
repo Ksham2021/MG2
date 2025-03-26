@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navigation } from './components/Navigation';
 import { Tree } from './components/Tree';
 import { CoinDisplay } from './components/CoinDisplay';
@@ -18,6 +18,7 @@ import { Profile } from './pages/Profile';
 import { SoulScript } from './pages/SoulScript';
 import { SoulSketch } from './pages/SoulSketch';
 import { SoulBloom } from './pages/SoulBloom';
+import { Community } from './pages/Community';
 import Games from './pages/Games'; // Import the new Games component
 
 function App() {
@@ -25,7 +26,11 @@ function App() {
   const [showMoodCheck, setShowMoodCheck] = useState(false);
   const [showExitMoodCheck, setShowExitMoodCheck] = useState(false);
   const [showAuthPopup, setShowAuthPopup] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const savedAuth = localStorage.getItem('isAuthenticated');
+    return savedAuth ? JSON.parse(savedAuth) : false;
+  });
   const [moodHistory, setMoodHistory] = useState<Array<{ date: string; mood: string }>>([]);
   const [treeState] = useState<TreeState>({
     health: 0.8,
@@ -33,12 +38,24 @@ function App() {
     color: 'text-green-500',
     size: 0.5
   });
+  const [userAvatar, setUserAvatar] = useState(() => {
+    const savedAvatar = localStorage.getItem('userAvatar');
+    return savedAvatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150";
+  });
+  const [userName, setUserName] = useState(() => {
+    const savedName = localStorage.getItem('userName');
+    return savedName || "User";
+  });
   const { currentMood, setCurrentMood, getMoodTheme, getMoodContent } = useMood();
   const moodTheme = getMoodTheme();
   const moodContent = getMoodContent();
   const [showQuiz, setShowQuiz] = useState(false);
   const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
-  const [coins, setCoins] = useState(150);
+  const [coins, setCoins] = useState(() => {
+    const savedCoins = localStorage.getItem('coins');
+    return savedCoins ? parseInt(savedCoins, 10) : 150;
+  });
+  const profileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Show initial mood check popup after a short delay
@@ -64,6 +81,30 @@ function App() {
     };
   }, [showExitMoodCheck]);
 
+  // Handle clicks outside the profile menu
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    }
+
+    if (showProfileMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [showProfileMenu]);
+
+  // Save authentication state to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('isAuthenticated', JSON.stringify(isAuthenticated));
+    localStorage.setItem('userAvatar', userAvatar);
+    localStorage.setItem('userName', userName);
+    localStorage.setItem('coins', coins.toString());
+  }, [isAuthenticated, userAvatar, userName, coins]);
+
   const handleInitialMoodSelect = (mood: string) => {
     const today = new Date().toISOString().split('T')[0];
     setMoodHistory(prev => [...prev, { date: today, mood }]);
@@ -76,8 +117,35 @@ function App() {
     setCurrentMood(mood as any);
   };
 
-  const handleAuthSuccess = () => {
+  const handleAuthSuccess = (userData: { name: string; avatar?: string }) => {
     setIsAuthenticated(true);
+    setUserName(userData.name);
+    if (userData.avatar) {
+      setUserAvatar(userData.avatar);
+    }
+    setShowAuthPopup(false);
+    
+    // Save to localStorage immediately for extra security
+    localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('userName', userData.name);
+    if (userData.avatar) {
+      localStorage.setItem('userAvatar', userData.avatar);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUserName("User");
+    setUserAvatar("https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150");
+    setShowProfileMenu(false);
+    setCurrentPage('home');
+    setCoins(150); // Reset coins to default value
+    
+    // Clear localStorage on logout
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userAvatar');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('coins');
   };
 
   const handleStartQuiz = (quiz: Quiz) => {
@@ -108,6 +176,8 @@ function App() {
         return <SoulSketch />;
       case 'soulbloom':
         return <SoulBloom />;
+      case 'community':
+        return <Community />;
       case 'games': // Add a new case for the Games page
         return <Games />;
       default:
@@ -287,7 +357,41 @@ function App() {
           </div>
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
-              <CoinDisplay amount={coins} />
+              <>
+                <CoinDisplay amount={coins} />
+                <div className="relative" ref={profileMenuRef}>
+                  <button 
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                    className="flex items-center gap-2 bg-white/10 backdrop-blur-md p-1 rounded-full border border-white/20 hover:bg-white/20 transition-all hover:scale-105 cursor-pointer"
+                  >
+                    <img 
+                      src={userAvatar} 
+                      alt="User Avatar" 
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  </button>
+                  
+                  {showProfileMenu && (
+                    <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white/10 backdrop-blur-xl border border-white/20 z-50">
+                      <button
+                        onClick={() => {
+                          setCurrentPage('profile');
+                          setShowProfileMenu(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/20 transition-colors"
+                      >
+                        Profile
+                      </button>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/20 transition-colors"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
             ) : (
               <>
                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
