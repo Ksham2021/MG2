@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Navigation } from './components/Navigation';
 import { Tree } from './components/Tree';
 import { CoinDisplay } from './components/CoinDisplay';
-import { Brain, Heart, Smile, Sun, Trophy, Sparkles, Clock, LogIn, UserPlus, BookOpen, Gamepad, Flower2, Star, ChevronRight } from 'lucide-react';
+import { Brain, Trophy, Sparkles, Clock, LogIn, BookOpen, Gamepad, Flower2, Star, ChevronRight } from 'lucide-react';
 import { PiggyBankIcon } from './components/PiggyBankIcon';
 import { Articles } from './pages/Articles';
 import { MoodCheckPopup } from './components/MoodCheckPopup';
@@ -46,7 +46,7 @@ function App() {
     const savedName = localStorage.getItem('userName');
     return savedName || "User";
   });
-  const { currentMood, setCurrentMood, getMoodTheme, getMoodContent } = useMood();
+  const { setCurrentMood, getMoodTheme, getMoodContent } = useMood();
   const moodTheme = getMoodTheme();
   const moodContent = getMoodContent();
   const [showQuiz, setShowQuiz] = useState(false);
@@ -153,7 +153,7 @@ function App() {
     setShowQuiz(true);
   };
 
-  const handleQuizComplete = (score: number, earnedCoins: number) => {
+  const handleQuizComplete = (earnedCoins: number) => {
     // Add coins based on correct answers
     setCoins(prev => prev + earnedCoins);
   };
