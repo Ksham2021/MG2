@@ -353,7 +353,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Sparkles className={`w-6 h-6 ${moodTheme.primaryColor} animate-float`} />
-            <h1 className="text-2xl font-bold gaming-gradient">MindGrow</h1>
+            <h1 className="text-2xl font-bold gaming-gradient">AstraSync</h1>
           </div>
           <div className="flex items-center gap-4">
             {isAuthenticated ? (

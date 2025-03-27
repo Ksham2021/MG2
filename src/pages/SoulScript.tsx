@@ -255,24 +255,26 @@ export function SoulScript() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 pb-20">
+    <div className="max-w-7xl mx-auto px-4 py-8 pb-20 relative">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-2">
           <Edit className={`w-6 h-6 ${moodTheme.primaryColor}`} />
-          <h1 className="text-3xl font-bold gaming-gradient">SoulScript</h1>
+          <h1 className="text-3xl font-bold gaming-gradient">AstraSync</h1>
         </div>
-        <button
-          onClick={handleSave}
-          className="py-2 px-4 rounded-lg bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500 text-white font-medium flex items-center gap-2"
-        >
-          <Save className="w-4 h-4" />
-          Save Entry
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleSave}
+            className="py-2 px-4 rounded-lg bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500 text-white font-medium flex items-center gap-2"
+          >
+            <Save className="w-4 h-4" />
+            Save Entry
+          </button>
+        </div>
       </div>
       
       <div className="mb-6">
         <p className="text-white/60 max-w-3xl">
-          Welcome to SoulScript, your personal sanctuary to explore emotions, unleash creativity, and embrace self-expression. 
+          Welcome to AstraSync, your personal sanctuary to explore emotions, unleash creativity, and embrace self-expression. 
           This digital diary is yours to shape, decorate, and cherish—a safe space where you can write freely without judgment.
         </p>
       </div>

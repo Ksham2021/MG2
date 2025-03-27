@@ -33,7 +33,7 @@ export function ExitMoodCheckPopup({ isOpen, onClose, onMoodSelect }: ExitMoodCh
         </div>
         
         <p className="text-white/60 mb-6">
-          How are you feeling after using MindGrow?
+          How are you feeling after using AstraSync?
         </p>
 
         <div className="grid grid-cols-3 gap-4">

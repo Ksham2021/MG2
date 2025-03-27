@@ -55,7 +55,7 @@ export function AuthPopup({ isOpen, onClose, onSuccess }: AuthPopupProps) {
       <div className="gaming-card w-full max-w-md p-6 m-4 animate-float">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold gaming-gradient">
-            {isSignIn ? 'Welcome Back!' : 'Join MindGrow'}
+            {isSignIn ? 'Welcome Back!' : 'Join AstraSync'}
           </h2>
           <button 
             onClick={onClose}
